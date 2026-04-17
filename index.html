@@ -150,7 +150,7 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:
   html,body{overflow:hidden;height:100%}
   .deck{height:100vh;width:100vw}
   .slide{overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
-  .si{position:relative!important;top:auto!important;left:auto!important;transform:none!important;width:100%!important;height:auto!important;min-height:calc(100vh - 70px);padding:20px 24px 80px!important}
+  .si{position:relative!important;top:auto!important;left:auto!important;transform:none!important;width:100%!important;height:auto!important;min-height:calc(100vh - 70px);padding:20px 24px 120px!important}
   .slide .logo{height:36px;top:20px;right:20px}
   .lbl{font-size:13px;letter-spacing:3px;margin-bottom:12px;margin-top:40px}
   .h1.w,.h1.d{font-size:22px;margin-bottom:20px;line-height:1.25}
@@ -164,16 +164,16 @@ html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:
   .s1 .dt{position:relative;bottom:auto;margin-top:32px;font-size:11px}
   .s1 .lbl{margin-top:0}
 
-  /* S2 Table */
+  /* S2 Table - keep comparison visible */
   .cmp{display:block}
   .cmp thead{display:none}
-  .cmp tbody{display:flex;flex-direction:column;gap:20px}
-  .cmp tr{display:flex;flex-direction:column;gap:4px;padding:16px 0;border-bottom:1px solid rgba(148,168,158,.1)}
+  .cmp tbody{display:flex;flex-direction:column;gap:16px}
+  .cmp tr{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:auto auto;gap:6px 12px;padding:16px 0;border-bottom:1px solid rgba(148,168,158,.1)}
   .cmp tr:last-child{border-bottom:none}
-  .cmp td{display:block;padding:4px 0!important;font-size:15px!important;line-height:1.6}
-  .cmp td:first-child{font-size:13px!important;color:var(--gl);font-weight:600;letter-spacing:1px;text-transform:uppercase;padding-bottom:4px!important}
-  .cmp td:nth-child(2){color:#7E9C90;padding-bottom:8px!important}
-  .cmp td:nth-child(3){color:rgba(255,255,255,.9);font-weight:500;background:rgba(185,143,82,.06);border-left:2px solid var(--gd);padding:12px 16px!important;border-radius:8px}
+  .cmp td{display:block;padding:0!important;font-size:14px!important;line-height:1.55}
+  .cmp td:first-child{grid-column:1/-1;font-size:12px!important;color:var(--gl);font-weight:600;letter-spacing:1px;text-transform:uppercase;padding-bottom:4px!important;margin-bottom:2px}
+  .cmp td:nth-child(2){color:#7E9C90;padding-right:8px!important}
+  .cmp td:nth-child(3){color:rgba(255,255,255,.9);font-weight:500;background:rgba(185,143,82,.06);border-left:2px solid var(--gd);padding:10px 12px!important;border-radius:6px}
 
   /* S3 Layers */
   .s3 .intro{font-size:14px;margin-bottom:8px}
