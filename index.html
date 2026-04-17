@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIsolution4.you — Product Factory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--dp:#0F2620;--sh:#1B3C34;--md:#1E4A3E;--gd:#B98F52;--gl:#D4AD6A;--pl:#EFF6F2;--ww:#F7F8F6;--gw:#5A6B64;--dk:#1A2E28;--wh:#FFF;--gy:#94A89E;--ok:#2D8B6F;--mt:#152E26}
+html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:#060E0A;-webkit-font-smoothing:antialiased}
+.deck{position:relative;width:100vw;height:100vh}
+.slide{position:absolute;inset:0;display:none;opacity:0;transition:opacity .4s ease;overflow:hidden}
+.slide.on{display:block;opacity:1}
+.si{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:min(100vw,177.78vh);height:min(100vh,56.25vw);display:flex;flex-direction:column;padding:4% 9%}
+.slide .logo{position:absolute;top:5%;right:5%;height:10%;width:auto;z-index:2;filter:drop-shadow(0 2px 8px rgba(0,0,0,.2))}
+.dkbg{background:radial-gradient(ellipse 130% 110% at 25% 15%,#163529,var(--dp) 55%,#081A12)}
+.dkbg::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");opacity:.02}
+.ltbg{background:linear-gradient(170deg,#F5F8F5,var(--ww) 50%,#EFF0EC)}
+.lbl{font-size:clamp(14px,1.2vw,18px);font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--gd);margin-bottom:2vh;margin-top:0;position:relative;z-index:1}
+.h1{font-weight:700;line-height:1.15;letter-spacing:-.02em;position:relative;z-index:1}
+.h1.w{color:var(--wh);font-size:clamp(26px,2.8vw,46px);margin-bottom:4.5vh}
+.h1.d{color:var(--dk);font-size:clamp(24px,2.5vw,40px);margin-bottom:4.5vh}
+
+/* NAV */
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:center;gap:28px;padding:14px 32px;background:rgba(9,18,13,.96);backdrop-filter:blur(20px);border-top:1px solid rgba(185,143,82,.08)}
+.nav button{background:none;border:1px solid rgba(185,143,82,.2);color:var(--gl);width:46px;height:46px;border-radius:50%;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.nav button:hover{background:rgba(185,143,82,.1);border-color:var(--gd)}
+.cnt{color:var(--gy);font-size:14px;font-weight:500;min-width:70px;text-align:center;font-variant-numeric:tabular-nums}
+.pbar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--gd),var(--gl));z-index:201;transition:width .4s;box-shadow:0 0 10px rgba(185,143,82,.4)}
+
+/* ═══ S1 COVER ═══ */
+.s1 .si{align-items:center;justify-content:center;text-align:center}
+.s1 .nm{font-size:clamp(40px,5vw,76px);font-weight:800;color:var(--wh);letter-spacing:-.03em;margin-bottom:3vh}
+.s1 .al{width:min(500px,42vw);height:2.5px;background:linear-gradient(90deg,transparent,var(--gd),transparent);margin-bottom:2.5vh}
+.s1 .po{font-size:clamp(20px,2.2vw,34px);font-weight:500;color:var(--gl);letter-spacing:.04em;margin-bottom:5vh}
+.s1 .tg{font-size:clamp(14px,1.3vw,20px);color:var(--gy);line-height:1.85;font-weight:300;max-width:750px}
+.s1 .dt{position:absolute;bottom:8%;font-size:clamp(10px,.85vw,13px);color:var(--gw);letter-spacing:.5px}
+
+/* ═══ S2 TABLE COMPARISON ═══ */
+.s2 .si{justify-content:center;gap:2vh}
+.cmp{width:100%;border-collapse:separate;border-spacing:0;flex:1;display:table}
+.cmp thead th{font-size:clamp(14px,1.15vw,18px);font-weight:600;letter-spacing:3px;text-transform:uppercase;padding:2vh 2.5vw;text-align:left}
+.cmp thead th:first-child{width:13%;color:transparent}
+.cmp thead th:nth-child(2){color:var(--gy);border-bottom:1px solid rgba(148,168,158,.15);width:38%}
+.cmp thead th:nth-child(3){color:var(--gl);border-bottom:2px solid var(--gd);background:rgba(185,143,82,.04);border-radius:10px 10px 0 0;width:38%}
+.cmp td{padding:2vh 2.5vw;font-size:clamp(17px,1.4vw,21px);line-height:1.6;vertical-align:top;border-bottom:1px solid rgba(148,168,158,.06)}
+.cmp td:first-child{font-size:clamp(14px,1.15vw,18px);color:var(--gl);font-weight:600;letter-spacing:.4px;vertical-align:top;padding-top:2.3vh}
+.cmp td:nth-child(2){color:#7E9C90}
+.cmp td:nth-child(3){color:rgba(255,255,255,.9);font-weight:500;background:rgba(185,143,82,.04);border-left:2px solid var(--gd)}
+.cmp tr:last-child td{border-bottom:none}
+.cmp tr:last-child td:nth-child(3){border-radius:0 0 10px 0}
+
+/* ═══ S3 LAYERS ═══ */
+.s3 .si{justify-content:flex-start;gap:1.5vh}
+.s3 .intro{font-size:clamp(17px,1.4vw,21px);color:var(--gw);line-height:1.6;margin-bottom:1vh}
+.layers{display:grid;grid-template-columns:1fr 1fr;gap:clamp(12px,1.4vw,20px);flex:1;min-height:0}
+.ly{background:var(--wh);border-radius:12px;padding:clamp(16px,2vh,28px) clamp(16px,2vw,28px);box-shadow:0 1px 2px rgba(0,0,0,.03),0 4px 16px rgba(0,0,0,.04);border-left:3px solid var(--pl);display:flex;flex-direction:column;transition:border-color .3s}
+.ly:hover{border-left-color:var(--gd)}
+.ly .ln{display:flex;align-items:baseline;gap:.6vw;margin-bottom:.6vh}
+.ly .lnum{font-size:clamp(18px,1.6vw,26px);font-weight:700;color:var(--gd);line-height:1}
+.ly .ltit{font-size:clamp(16px,1.3vw,20px);font-weight:600;color:var(--dk)}
+.ly .ldesc{font-size:clamp(16px,1.25vw,19px);color:var(--gw);line-height:1.6;flex:1}
+.ly .leff{font-size:clamp(14px,1.15vw,17px);color:var(--ok);font-style:italic;margin-top:auto;padding-top:.8vh}
+
+/* ═══ S4 TWO BLOCKS ═══ */
+.s4 .si{justify-content:space-between}
+.br{display:flex;gap:3vw;flex:1;margin:2vh 0;min-height:0}
+.bk{flex:1;border-radius:14px;padding:4vh 3.5vw;display:flex;flex-direction:column;gap:1.5vh}
+.bk.m{background:linear-gradient(165deg,#1A3530,var(--mt))}
+.bk.h{background:linear-gradient(165deg,#1F5044,var(--md));border:1px solid rgba(185,143,82,.3);box-shadow:inset 0 1px 0 rgba(185,143,82,.06)}
+.bk .bt{font-size:clamp(16px,1.4vw,22px);font-weight:600}
+.bk.m .bt{color:#7E9C90}
+.bk.h .bt{color:var(--gl)}
+.bk .bb{font-size:clamp(18px,1.45vw,22px);line-height:1.75}
+.bk.m .bb{color:#7E9C90}
+.bk.h .bb{color:rgba(255,255,255,.85)}
+.s4f{display:flex;align-items:center;justify-content:center;gap:3vw;padding:2vh 0;margin-top:auto}
+.s4f .bn{font-size:clamp(48px,5.5vw,84px);font-weight:800;color:var(--gd);letter-spacing:-.04em;line-height:1;text-shadow:0 2px 20px rgba(185,143,82,.15)}
+.s4f .bx{font-size:clamp(17px,1.35vw,21px);color:rgba(255,255,255,.65);line-height:1.75}
+
+/* ═══ S5 COOPERATION ═══ */
+.s5 .si{justify-content:center;gap:2.5vh}
+.phases{display:flex;gap:clamp(16px,2vw,28px);flex:1;min-height:0;align-items:stretch}
+.ph{flex:1;border-radius:14px;padding:clamp(24px,3vh,36px) clamp(20px,2.2vw,32px);display:flex;flex-direction:column;gap:1.2vh;background:linear-gradient(165deg,#1A3530,var(--mt));border:1px solid rgba(90,107,100,.2);transition:border-color .3s}
+.ph.active{background:linear-gradient(165deg,#1F5044,var(--md));border:1px solid rgba(185,143,82,.25)}
+.ph .ph-num{font-size:clamp(32px,3vw,48px);font-weight:800;color:var(--gd);line-height:1;letter-spacing:-.03em}
+.ph .ph-title{font-size:clamp(18px,1.5vw,24px);font-weight:600;color:var(--wh);letter-spacing:-.01em}
+.ph .ph-time{font-size:clamp(14px,1.15vw,17px);color:var(--gl);font-weight:500;padding-bottom:1vh;border-bottom:1px solid rgba(185,143,82,.15);margin-bottom:.5vh}
+.ph .ph-desc{font-size:clamp(16px,1.3vw,19px);color:var(--gy);line-height:1.7;flex:1}
+.ph .ph-result{font-size:clamp(14px,1.15vw,17px);color:rgba(255,255,255,.85);font-weight:500;margin-top:auto;padding-top:1.2vh;border-top:1px solid rgba(185,143,82,.08)}
+.s5f{text-align:center;padding:2vh 0 0;margin-top:auto;border-top:1px solid rgba(185,143,82,.1)}
+.s5f p{font-size:clamp(18px,1.5vw,23px);font-weight:500;color:var(--gy);letter-spacing:-.01em}
+
+/* ═══ S6 CYBER — cards on light bg ═══ */
+.s6 .si{justify-content:flex-start;gap:2vh}
+.s6 .ctx{font-size:clamp(17px,1.4vw,21px);color:var(--gw);line-height:1.7;max-width:95%}
+.sec-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,1.8vw,24px);flex:1;min-height:0;align-content:start}
+.sec-card{border-radius:14px;padding:clamp(22px,2.8vh,34px) clamp(22px,2.5vw,34px);background:var(--wh);box-shadow:0 1px 2px rgba(0,0,0,.03),0 4px 16px rgba(0,0,0,.04);border-left:3px solid var(--pl);transition:border-color .3s}
+.sec-card:hover{border-left-color:var(--gd)}
+.sec-card .sec-t{font-size:clamp(18px,1.5vw,22px);font-weight:600;color:var(--dk);margin-bottom:1vh}
+.sec-card .sec-d{font-size:clamp(16px,1.3vw,19px);color:var(--gw);line-height:1.65}
+
+/* ═══ S7 AI — three cards ═══ */
+.s7 .si{justify-content:flex-start;gap:2vh}
+.s7 .intro-ai{font-size:clamp(17px,1.4vw,21px);color:var(--gy);line-height:1.7;max-width:95%}
+.ai-cards{display:flex;gap:clamp(16px,2vw,28px);flex:1;min-height:0;align-items:stretch}
+.ai-card{flex:1;border-radius:14px;padding:clamp(24px,3vh,36px) clamp(20px,2.2vw,32px);display:flex;flex-direction:column;gap:1.5vh;background:linear-gradient(165deg,#1A3530,var(--mt));border:1px solid rgba(90,107,100,.2)}
+.ai-card.hl{background:linear-gradient(165deg,#1F5044,var(--md));border:1px solid rgba(185,143,82,.25)}
+.ai-card .ai-num{font-size:clamp(32px,3vw,48px);font-weight:800;color:var(--gd);line-height:1;letter-spacing:-.03em}
+.ai-card .ai-t{font-size:clamp(18px,1.5vw,24px);font-weight:600;color:var(--wh);letter-spacing:-.01em}
+.ai-card .ai-d{font-size:clamp(16px,1.3vw,19px);color:var(--gy);line-height:1.7;flex:1}
+.ai-card .ai-list{list-style:none;display:flex;flex-direction:column;gap:.8vh;flex:1}
+.ai-card .ai-list li{font-size:clamp(15px,1.2vw,18px);color:var(--gy);line-height:1.5;padding-left:1.2em;position:relative}
+.ai-card .ai-list li::before{content:'';position:absolute;left:0;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--gd)}
+.s7f{text-align:center;padding:2vh 0 0;margin-top:auto;border-top:1px solid rgba(185,143,82,.1)}
+.s7f p{font-size:clamp(17px,1.4vw,21px);font-weight:500;color:var(--gy);font-style:italic}
+
+/* ═══ S8 VISION — light bg, milestone cards ═══ */
+.s8 .si{justify-content:flex-start;gap:2vh}
+.s8 .intro-v{font-size:clamp(17px,1.4vw,21px);color:var(--gw);line-height:1.7;max-width:95%}
+.milestones{display:flex;gap:clamp(16px,2vw,28px);flex:1;min-height:0;align-items:stretch}
+.ms{flex:1;border-radius:14px;padding:clamp(24px,3vh,36px) clamp(20px,2.2vw,32px);display:flex;flex-direction:column;gap:1.2vh;background:var(--wh);box-shadow:0 1px 2px rgba(0,0,0,.03),0 4px 16px rgba(0,0,0,.04);border-top:3px solid var(--pl);transition:border-color .3s}
+.ms.final{border-top-color:var(--gd);box-shadow:0 2px 4px rgba(185,143,82,.05),0 6px 28px rgba(185,143,82,.08)}
+.ms .ms-time{font-size:clamp(14px,1.15vw,17px);font-weight:600;color:var(--gd);letter-spacing:1px;text-transform:uppercase}
+.ms .ms-title{font-size:clamp(18px,1.5vw,24px);font-weight:700;color:var(--dk);letter-spacing:-.01em;padding-bottom:1vh;border-bottom:1px solid rgba(30,74,62,.1);margin-bottom:.5vh}
+.ms .ms-list{list-style:none;display:flex;flex-direction:column;gap:.8vh;flex:1}
+.ms .ms-list li{font-size:clamp(15px,1.2vw,18px);color:var(--gw);line-height:1.55;padding-left:1.2em;position:relative}
+.ms .ms-list li::before{content:'';position:absolute;left:0;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--ok)}
+.ms.final .ms-list li::before{background:var(--gd)}
+.s8f{text-align:center;padding:2vh 0 0;margin-top:auto}
+.s8f p{font-size:clamp(17px,1.4vw,21px);font-weight:500;color:var(--dk);letter-spacing:-.01em}
+
+/* ═══ S9 CTA ═══ */
+.s9 .si{align-items:center;justify-content:center;text-align:center}
+.s9 .al{width:72px;height:2.5px;background:linear-gradient(90deg,transparent,var(--gd),transparent);margin-bottom:3vh}
+.s9 .h1{margin-bottom:4vh}
+.s9 .in{font-size:clamp(14px,1.2vw,19px);color:var(--gy);line-height:1.75;margin-bottom:3vh;max-width:620px;font-weight:300}
+.pt{list-style:none;margin-bottom:4vh;text-align:center}
+.pt li{font-size:clamp(14px,1.2vw,19px);color:rgba(255,255,255,.88);margin-bottom:1.4vh;line-height:1.5}
+.pt .n{color:var(--gl);margin-right:6px}
+.cb2{display:inline-block;background:linear-gradient(135deg,var(--gd),#C99E5F);color:var(--dp);padding:clamp(14px,1.6vh,20px) clamp(32px,3.5vw,56px);border-radius:14px;font-size:clamp(17px,1.4vw,22px);font-weight:600;text-decoration:none;box-shadow:0 4px 24px rgba(185,143,82,.25);transition:all .3s;margin-bottom:3vh}
+.cb2:hover{transform:translateY(-2px);box-shadow:0 6px 32px rgba(185,143,82,.35)}
+.cc{font-size:clamp(11px,.95vw,15px);color:var(--gy);margin-bottom:2.5vh;letter-spacing:.3px}
+.cf{font-size:clamp(12px,1vw,16px);color:rgba(255,255,255,.55);font-style:italic;font-weight:300}
+
+/* ═══ PRINT ═══ */
+@page{size:landscape;margin:0}
+@media print{
+  .nav,.pbar{display:none!important}
+  body{margin:0!important;padding:0!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  .deck{position:static!important;overflow:visible!important;height:auto!important;width:100%!important}
+  .slide{position:static!important;display:block!important;opacity:1!important;width:100vw!important;height:100vh!important;page-break-after:always!important;break-after:page!important;page-break-inside:avoid!important;break-inside:avoid!important;overflow:hidden!important}
+  .slide:last-child{page-break-after:auto!important;break-after:auto!important}
+  .si{position:static!important;top:auto!important;left:auto!important;transform:none!important;width:100%!important;height:100%!important;display:flex!important}
+  .dkbg::before{display:none!important}
+  .dkbg{background:var(--dp)!important}
+  .ltbg{background:var(--ww)!important}
+}
+</style>
+</head>
+<body>
+<div class="pbar" id="pbar" style="width:11.1%"></div>
+<div class="deck">
+
+<!-- ═══ SLIDE 1: COVER ═══ -->
+<div class="slide dkbg s1 on" id="s1"><div class="si">
+  <img class="logo" src="assets/logo.png" alt="AIsolution4.you">
+  <div class="nm">AIsolution4.you</div>
+  <div class="al"></div>
+  <div class="po">Product Factory</div>
+  <div class="tg">Projektujemy i wdrażamy rozwiązania cyfrowe dla przedsiębiorców.<br>Od koncepcji po funkcjonujący biznes.</div>
+  <div class="dt">Przygotowano dla Krzysztof Macha · kwiecień 2026</div>
+</div></div>
+
+<!-- ═══ SLIDE 2: PRODUCT FACTORY ═══ -->
+<div class="slide dkbg s2" id="s2"><div class="si">
+  <img class="logo" src="assets/logo.png" alt="">
+  <div class="lbl">Czym jest Product Factory</div>
+  <div class="h1 w">AIsolution4.you - wspólnie rozwijamy produkty,<br>które generują przychody.</div>
+  <table class="cmp"><thead><tr><th></th><th>Zwykły Software house</th><th>AIsolution4.you</th></tr></thead><tbody>
+    <tr><td>Rezultat</td><td>Oprogramowanie - kod źródłowy, wymagające odrębnego utrzymania, integracji z istniejącymi systemami oraz zabezpieczenia danych</td><td>Kompletny produkt cyfrowy - uruchomiony, zintegrowany z infrastrukturą firmy, z wdrożonym marketingiem i cyberbezpieczeństwem</td></tr>
+    <tr><td>Zakres</td><td>Wyłącznie programowanie - marketing, analityka i bezpieczeństwo danych pozostają w gestii zamawiającego</td><td>Produkt, marketing, sprzedaż, analityka i bezpieczeństwo danych w ramach jednego projektu</td></tr>
+    <tr><td>Koszty</td><td>Rozliczenie za czas pracy zespołu</td><td>Stały koszt projektu, określony przed rozpoczęciem prac</td></tr>
+    <tr><td>Koordynacja</td><td>Odrębny dostawca dla każdego obszaru - osobne budżety, umowy i procesy uzgodnień</td><td>Jeden punkt kontaktu odpowiadający za całość realizacji</td></tr>
+    <tr><td>Po projekcie</td><td>Przekazanie kodu źródłowego</td><td>Stała opieka - wsparcie techniczne, rozwój produktu, działania marketingowe (SEO, GEO, Ads)</td></tr>
+  </tbody></table>
+</div></div>
+
+<!-- ═══ SLIDE 3: LAYERS ═══ -->
+<div class="slide ltbg s3" id="s3"><div class="si">
+  <img class="logo" src="assets/logo.png" alt="">
+  <div class="lbl">Z czego składa się wdrożenie</div>
+  <div class="h1 d">Każde wdrożenie składa się z czterech komponentów.</div>
+  <div class="intro">Komponenty te nie są odrębnymi usługami zamawianymi osobno. Stanowią integralną część jednego wdrożenia.</div>
+  <div class="layers">
+    <div class="ly">
+      <div class="ln"><span class="lnum">①</span><span class="ltit">Warstwa produktowa - strona, aplikacja lub system</span></div>
+      <div class="ldesc"><br>Narzędzia cyfrowe przeznaczone dla klientów końcowych lub zespołu firmy: strona internetowa zoptymalizowana pod generowanie zapytań, aplikacja mobilna, system rezerwacji, panel zarządczy. Każdy komponent zaprojektowany z myślą o konwersji użytkownika do klienta i zintegrowany z pozostałą infrastrukturą.</div>
+      <div class="leff">→ Narzędzie generujące przychód od momentu uruchomienia</div>
+    </div>
+    <div class="ly">
+      <div class="ln"><span class="lnum">②</span><span class="ltit">Warstwa sprzedażowa - marketing i pozyskiwanie klientów</span></div>
+      <div class="ldesc"><br>Strategia marketingowa, treści, kampanie w wyszukiwarkach i mediach społecznościowych, proces obsługi zapytań handlowych. Każdy kanał sprzedażowy mierzony pod kątem kosztów i efektywności. Sztuczna inteligencja wspiera produkcję treści i optymalizację kampanii - nadzór merytoryczny pozostaje zawsze po stronie zespołu.</div>
+      <div class="leff">→ Pozyskiwanie klientów wsparte technologią z mierzalnym kosztem i efektem biznesowym</div>
+    </div>
+    <div class="ly">
+      <div class="ln"><span class="lnum">③</span><span class="ltit">Warstwa analityczna - dane i raportowanie</span></div>
+      <div class="ldesc"><br>Integracja danych z SEO, marketingu, księgowości, sprzedaży i systemów operacyjnych w jeden spójny ekosystem informacyjny. Panel zarządczy prezentujący w czasie rzeczywistym przychód, rentowność poszczególnych usług/linii biznesowych, obłożenie oraz koszty pozyskania klienta.</div>
+      <div class="leff">→ wyniki operacyjne i finansowe w czasie rzeczywistym zamiast okresowych zestawień</div>
+    </div>
+    <div class="ly">
+      <div class="ln"><span class="lnum">④</span><span class="ltit">Warstwa bezpieczeństwa - ochrona danych i zgodność regulacyjna</span></div>
+      <div class="ldesc"><br>Audyt cyberbezpieczeństwa każdego komponentu przed oddaniem do użytku. Zamknięte środowiska AI zapewniające, że dane firmy nie opuszczają kontrolowanej infrastruktury. Szyfrowanie end-to-end (AES-256). Zgodność z RODO i dyrektywą NIS2.</div>
+      <div class="leff">→ Pełna ochrona danych wrażliwych - pacjentów, klientów i organizacji</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- ═══ SLIDE 4: PORTFOLIO ═══ -->
+<div class="slide dkbg s4" id="s4"><div class="si">
+  <img class="logo" src="assets/logo.png" alt="">
+  <div class="lbl">Dla właściciela wielu firm</div>
+  <div class="h1 w">Każdy kolejny podmiot korzysta z infrastruktury<br>zbudowanej w poprzednich projektach.</div>
+  <table class="cmp"><thead><tr><th></th><th>Rozproszona struktura dostawców</th><th>AIsolution4.you</th></tr></thead><tbody>
+    <tr><td>Dostawcy</td><td>Każda nowa linia biznesowa wymaga pozyskania odrębnego zespołu programistycznego, agencji marketingowej, firmy analitycznej i specjalistów ds. bezpieczeństwa</td><td>Jeden partner odpowiadający za technologię, marketing, analitykę i bezpieczeństwo danych — dla całego portfolio</td></tr>
+    <tr><td>Infrastruktura</td><td>Rozwiązania tworzone od podstaw dla każdego przedsięwzięcia, bez możliwości przeniesienia między projektami</td><td>Moduły płatności, obsługi klientów, raportowania i zabezpieczeń adaptowane z wcześniejszych wdrożeń</td></tr>
+    <tr><td>Czas uruchomienia</td><td>Nakład organizacyjny rośnie proporcjonalnie do liczby firm - czas realizacji piątego wdrożenia porównywalny z pierwszym</td><td>Każde kolejne wdrożenie szybsze i tańsze dzięki zweryfikowanej infrastrukturze bazowej</td></tr>
+    <tr><td>Zarządzanie</td><td>Odrębne narzędzia i raporty dla każdej firmy, brak zagregowanego widoku na portfolio</td><td>Jeden panel zarządczy: przychody, koszty i wskaźniki operacyjne - dla każdej firmy osobno oraz w ujęciu łącznym</td></tr>
+  </tbody></table>
+  <div class="s4f">
+    <div class="bn">70%</div>
+    <div class="bx">infrastruktury wymaganej przez nowy produkt jest przygotowana i zweryfikowana.<br>Pozostałe 30% dostosowywane do specyfiki danego przedsięwzięcia/projektu.</div>
+  </div>
+</div></div>
+
+<!-- ═══ SLIDE 5: COOPERATION MODEL ═══ -->
+<div class="slide dkbg s5" id="s5"><div class="si">
+  <img class="logo" src="assets/logo.png" alt="">
+  <div class="lbl">Model współpracy</div>
+  <div class="h1 w">Trzy etapy realizacji. Przewidywalne koszty w każdym z nich.</div>
+  <div class="phases">
+    <div class="ph">
+      <div class="ph-num">01</div>
+      <div class="ph-title">Analiza i planowanie</div>
+      <div class="ph-time">2–3 tygodnie</div>
+      <div class="ph-desc">Analiza firmy, projektu, rynku, otoczenia konkurencyjnego, procesów operacyjnych oraz potencjału biznesowego. Modelowanie zwrotu z inwestycji.</div>
+      <div class="ph-result">Rezultat: plan wdrożenia z zakresem prac, harmonogramem i stałą kwotą realizacji</div>
+    </div>
+    <div class="ph active">
+      <div class="ph-num">02</div>
+      <div class="ph-title">Budowa i uruchomienie</div>
+      <div class="ph-time">Stały koszt określony przed rozpoczęciem</div>
+      <div class="ph-desc">Realizacja projektu w oparciu o zweryfikowane moduły. Zakres, budżet i termin określone z góry. Rozliczenie za całość projektu, nie za godziny pracy zespołu.</div>
+      <div class="ph-result">Rezultat: wdrożony produkt cyfrowy z pierwszymi użytkownikami</div>
+    </div>
+    <div class="ph">
+      <div class="ph-num">03</div>
+      <div class="ph-title">Opieka i rozwój</div>
+      <div class="ph-time">Ustalony budżet</div>
+      <div class="ph-desc">Wsparcie techniczne, rozwój funkcjonalności, bieżące działania marketingowe. Zakres i koszt opieki ustalane na etapie wdrożenia, z możliwością dostosowania w miarę rozwoju produktu.</div>
+      <div class="ph-result">Rezultat: stałe partnerstwo ukierunkowane na wzrost wartości produktu</div>
+    </div>
+  </div>
+  <div class="s5f"><p>Pełna przewidywalność kosztów. Rozliczenie projektowe, nie godzinowe.</p></div>
+</div></div>
+
+<!-- ═══ SLIDE 6: CYBERSECURITY ═══ -->
+<div class="slide ltbg s6" id="s6"><div class="si">
+  <img class="logo" src="assets/logo.png" alt="">
+  <div class="lbl">Bezpieczeństwo danych</div>
+  <div class="h1 d">Ochrona danych pacjentów, klientów i organizacji -<br>element każdego wdrożenia, a nie odrębny projekt cyberbezpieczeństwa.</div>
+  <div class="ctx">Produkty cyfrowe przetwarzają dane wymagające szczególnej ochrony: dokumentację medyczną, dane osobowe, informacje finansowe, warunki umów. Bez odpowiednich zabezpieczeń każde wdrożenie technologiczne - w tym narzędzia AI - staje się potencjalnym źródłem wycieku danych wrażliwych.<br><br></div>
+  <div class="sec-grid">
+    <div class="sec-card">
+      <div class="sec-t">Zamknięte środowiska</div>
+      <div class="sec-d">Dane wrażliwe przetwarzane wyłącznie w izolowanej infrastrukturze. Informacje poufne nie opuszczają kontrolowanego środowiska i nie są przekazywane zewnętrznym dostawcom usług AI.</div>
+    </div>
+    <div class="sec-card">
+      <div class="sec-t">Zgodność regulacyjna</div>
+      <div class="sec-d">Każde wdrożenie projektowane z uwzględnieniem RODO, dyrektywy NIS2 oraz wymogów sektorowych - w szczególności przepisów dotyczących przetwarzania danych medycznych.</div>
+    </div>
+    <div class="sec-card">
+      <div class="sec-t">Szyfrowanie i audyt</div>
+      <div class="sec-d">Komunikacja i przechowywanie danych zabezpieczone szyfrowaniem end-to-end (AES-256, TLS 1.3). Każdy komponent poddawany przeglądowi bezpieczeństwa przed przekazaniem do użytku.</div>
+    </div>
+    <div class="sec-card">
+      <div class="sec-t">Nadzór ekspercki</div>
+      <div class="sec-d">Bezpieczeństwo nadzorowane przez CTO z poświadczeniami na poziomie państwowym, doświadczeniem w środowiskach NATO i GPW oraz dorobkiem 88 publikacji naukowych i 6 patentów.</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- ═══ SLIDE 7: AI ═══ -->
+<div class="slide dkbg s7" id="s7"><div class="si">
+  <img class="logo" src="assets/logo.png" alt="">
+  <div class="lbl">Sztuczna inteligencja</div>
+  <div class="h1 w">AI wbudowane w architekturę każdego systemu -<br>nie jako dodatek, lecz jako element konstrukcyjny.</div>
+  <div class="intro-ai">Infrastruktura AIsolution4.you projektowana jest z pełną gotowością do integracji z modelami AI. Struktura danych, interfejsy i przepływy informacji przygotowane tak, aby rozbudowa o kolejne funkcje oparte na AI nie wymagała przebudowy systemu.</div>
+  <div class="ai-cards">
+    <div class="ai-card">
+      <div class="ai-num">01</div>
+      <div class="ai-t">Architektura gotowa na AI</div>
+      <div class="ai-d">Ujednolicona struktura danych, standardowe interfejsy i udokumentowane przepływy informacji umożliwiają wdrażanie kolejnych funkcji opartych na AI bez konieczności przebudowy istniejących komponentów systemu.</div>
+    </div>
+    <div class="ai-card hl">
+      <div class="ai-num">02</div>
+      <div class="ai-t">Bezpieczne modele wewnętrzne</div>
+      <div class="ai-d">Tam, gdzie wymagana jest poufność - dokumentacja medyczna, dane pacjentów, informacje finansowe - zastosowanie znajdują wewnętrzne modele AI, pracujące w zamkniętym środowisku. Dane wrażliwe nie opuszczają kontrolowanej infrastruktury.</div>
+    </div>
+    <div class="ai-card">
+      <div class="ai-num">03</div>
+      <div class="ai-t">Zastosowania</div>
+      <ul class="ai-list">
+        <li>Automatyzacja obsługi zapytań i korespondencji</li>
+        <li>Generowanie i optymalizacja treści marketingowych</li>
+        <li>Analiza danych sprzedażowych i rekomendacje działań</li>
+        <li>Automatyczne raportowanie i wykrywanie anomalii</li>
+      </ul>
+    </div>
+  </div>
+  <div class="s7f"><p>AI jako fundament architektury - obecna w każdym produkcie, gotowa do rozbudowy wraz z rozwojem biznesu.</p></div>
+</div></div>
+
+<!-- ═══ SLIDE 8: VISION ═══ -->
+<div class="slide ltbg s8" id="s8"><div class="si">
+  <img class="logo" src="assets/logo.png" alt="">
+  <div class="lbl">Perspektywa 12 miesięcy</div>
+  <div class="h1 d">Od wdrożenia do pełnej kontroli nad portfolio.</div>
+  <div class="intro-v">Przewidywany harmonogram realizacji oparty na doświadczeniu z przeprowadzonych projektów. Każdy etap kończy się mierzalnym rezultatem.</div>
+  <div class="milestones">
+    <div class="ms">
+      <div class="ms-time">Miesiąc 1–3</div>
+      <div class="ms-title">Uruchomienie</div>
+      <ul class="ms-list">
+        <li>Analiza potrzeb i architektura biznesowo-systemowa</li>
+        <li>Wdrożony produkt cyfrowy z pierwszymi użytkownikami</li>
+        <li>Aktywne kanały pozyskiwania klientów</li>
+        <li>Panel zarządczy z bieżącymi danymi operacyjnymi</li>
+        <li>Zabezpieczenia danych wdrożone i poddane audytowi</li>
+      </ul>
+    </div>
+    <div class="ms">
+      <div class="ms-time">Miesiąc 4–6</div>
+      <div class="ms-title">Optymalizacja</div>
+      <ul class="ms-list">
+        <li>Kampanie marketingowe optymalizowane na podstawie danych</li>
+        <li>Mierzalny koszt pozyskania klienta i wskaźniki konwersji</li>
+        <li>Automatyzacja procesów operacyjnych i raportowania</li>
+        <li>Integracja z istniejącą infrastrukturą IT organizacji</li>
+      </ul>
+    </div>
+    <div class="ms final">
+      <div class="ms-time">Miesiąc 7–12</div>
+      <div class="ms-title">Pełna operacyjność</div>
+      <ul class="ms-list">
+        <li>Całe portfolio w jednym panelu zarządczym</li>
+        <li>Decyzje podejmowane w oparciu o aktualne dane</li>
+        <li>AI zintegrowane z procesami operacyjnymi</li>
+        <li>Infrastruktura gotowa do uruchomienia kolejnego przedsięwzięcia</li>
+      </ul>
+    </div>
+  </div>
+  <div class="s8f"><p>Zarządzanie oparte na aktualnych danych rzeczywistych - nie na zestawieniach przygotowywanych raz w miesiącu.</p></div>
+</div></div>
+
+<!-- ═══ SLIDE 9: CTA ═══ -->
+<div class="slide dkbg s9" id="s9"><div class="si">
+  <img class="logo" src="assets/logo.png" alt="">
+  <div class="lbl" style="margin-bottom:1vh">Następny krok</div>
+  <div class="al"></div>
+  <div class="h1 w">Porozmawiajmy o potrzebach firmy<br>i Waszych projektach.</div>
+  <div class="in">Spotkanie, po którym obie strony będą wiedzieć:</div>
+  <ul class="pt">
+    <li><span class="n">①</span> Czy nasze podejście odpowiada na potrzeby Waszego biznesu?</li>
+    <li><span class="n">②</span> Co możemy zbudować i w jakim czasie?</li>
+    <li><span class="n">③</span> Jaki jest koszt wdrożenia i przewidywany termin zwrotu z inwestycji?</li>
+  </ul>
+  <a class="cb2" href="https://calendly.com/m-marczak-aisolution4" target="_blank">Umów spotkanie</a>
+  <div class="cc">Magdalena Lubańska &middot; 573-013-624 &middot; m.lubanska@aisolution4.you</div>
+  <div class="cf">Wstępna propozycja — w siedem dni od spotkania.</div>
+</div></div>
+
+</div>
+<nav class="nav">
+  <button id="pv">&#8249;</button>
+  <span class="cnt"><span id="cn">1</span><span style="opacity:.3"> / </span><span id="tt">9</span></span>
+  <button id="nx">&#8250;</button>
+</nav>
+<script>
+(function(){
+  const S=document.querySelectorAll('.slide'),T=S.length;let c=0;
+  const $c=document.getElementById('cn'),$t=document.getElementById('tt'),$p=document.getElementById('pbar');
+  $t.textContent=T;
+  function go(n){if(n<0||n>=T||n===c)return;S[c].style.opacity='0';setTimeout(()=>{S[c].classList.remove('on');c=n;S[c].classList.add('on');requestAnimationFrame(()=>{S[c].style.opacity='1'});$c.textContent=c+1;$p.style.width=((c+1)/T*100)+'%'},250)}
+  document.getElementById('pv').onclick=()=>go(c-1);
+  document.getElementById('nx').onclick=()=>go(c+1);
+  document.onkeydown=e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(c+1)}if(e.key==='ArrowLeft')go(c-1)};
+  let tx=0;
+  document.addEventListener('touchstart',e=>{tx=e.changedTouches[0].screenX},{passive:true});
+  document.addEventListener('touchend',e=>{const d=e.changedTouches[0].screenX-tx;if(d<-50)go(c+1);if(d>50)go(c-1)},{passive:true});
+})();
+</script>
+</body>
+</html>
